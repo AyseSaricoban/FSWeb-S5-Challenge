@@ -1,8 +1,10 @@
-const Tablar = (konular) => {
+import axios from "axios";
+
+const Tablar = (konu) => {
   // GÖREV 3
   // ---------------------
-  // Tek argümanı bir dizi ("konular") olan bu fonksiyonu uygulayın.
-  // Örnek olarak, konular dizisi şu şekilde deklare edilmişse ['javascript', 'bootstrap', 'teknoloji']
+  // Tek argümanı bir dizi ("konu") olan bu fonksiyonu uygulayın.
+  // Örnek olarak, konu dizisi şu şekilde deklare edilmişse ['javascript', 'bootstrap', 'teknoloji']
   // fonksiyon aşağıdaki şekilde bir DOM öğesi döndürecek.
   // Kullanılan etiketler, öğelerin hiyerarşisi ve öznitelikleri sağlanan işaretlemeyle eşleşmelidir!
   // Öğelerin içindeki metin, "textContent" özelliği kullanılarak ayarlanacaktır ("innerText" DEĞİL).
@@ -13,7 +15,19 @@ const Tablar = (konular) => {
   //   <div class="tab">teknoloji</div>
   // </div>
   //
-}
+  const topics = document.createElement("div");
+  topics.classList.add("topics");
+
+  konu.map((item) => {
+    const tab = document.createElement("div");
+    tab.classList.add("tab");
+    tab.textContent = item;
+    topics.appendChild(tab);
+    console.log(item);
+  });
+
+  return topics;
+};
 
 const tabEkleyici = (secici) => {
   // GÖREV 4
@@ -23,6 +37,17 @@ const tabEkleyici = (secici) => {
   // Yanıtın içindeki konu dizisini bulun ve Tablar bileşenini kullanarak tabları oluşturun.
   // Tabları, fonksiyona iletilen seçiciyle eşleşen DOM'daki öğeye ekleyin.
   //
-}
+  const tablarContainer = document.querySelector(secici);
+  axios
+    .get("http://localhost:5001/api/konular")
+    .then(function (response) {
+      const tablar = Tablar(response.data.konular);
+      tablarContainer.appendChild(tablar);
+    })
+    .catch(function (error) {
+      tablarContainer.textContent = "hata";
+      console.log(error);
+    });
+};
 
-export { Tablar, tabEkleyici }
+export { Tablar, tabEkleyici };
